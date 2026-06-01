@@ -76,7 +76,7 @@ Auditors check:
 =========================================================
 */
 
-contract ArrayStorage {
+contract ArrayStoragevul {
 
     uint256[] public numbers;
 
@@ -396,3 +396,118 @@ IMPORTANT CONCEPTS LEARNED
 
 =========================================================
 */
+
+
+//Patch code
+
+contract ArrayStorage {
+
+    uint256[] public numbers;
+
+    function addNumber(uint256 _number) public {
+        numbers.push(_number);
+    }
+
+    function getNumber(uint256 _index) public view returns (uint256) {
+        return numbers[_index];
+    }
+
+    function getLength() public view returns (uint256) {
+        return numbers.length;
+    }
+
+    function removeLastNumber() public {
+        require(numbers.length > 0, "Array is empty");
+        numbers.pop();
+    }
+}
+
+
+
+
+/*
+Audit Report
+
+Title: Missing Empty Array Check in removeLastNumber()
+
+Severity: Low
+
+Reason: Potential runtime revert due to calling pop() on an empty array.
+
+Location:
+
+Contract: ArrayStoragevul
+Function: removeLastNumber()
+
+Vulnerability Description:
+
+The removeLastNumber() function uses numbers.pop() to remove the last element of the dynamic array.
+However, without validating that the array contains at least one element, the function can revert when called on an empty array.
+
+While Solidity already prevents underflow in array operations, the revert reason will be low-level and less descriptive if not handled explicitly.
+
+Impact:
+
+If removeLastNumber() is called when the numbers array is empty:
+
+The transaction will revert
+Execution will fail unexpectedly
+Frontend or integrated contracts may break due to unhandled errors
+
+In user-facing or protocol-critical systems, this may lead to:
+
+Poor UX due to unclear failure reasons
+Failed batch operations
+Unnecessary gas consumption
+Proof of Concept:
+Deploy the contract
+Ensure numbers.length == 0
+
+Call:
+
+removeLastNumber()
+Transaction reverts due to invalid pop operation
+Root Cause:
+
+The function performs a state-changing array operation without validating array length:
+
+numbers.pop();
+
+No precondition check ensures that numbers.length > 0.
+
+Recommendation:
+
+Add an explicit check before performing pop():
+
+require(numbers.length > 0, "Array is empty");
+
+This ensures:
+
+Clear revert reason
+Safer execution flow
+Better debugging and UX
+Patched Code:
+*/
+pragma solidity ^0.8.0;
+
+contract ArrayStoragevull {
+
+    uint256[] public numbers;
+
+    function addNumber(uint256 _number) public {
+        numbers.push(_number);
+    }
+
+    function getNumber(uint256 _index) public view returns (uint256) {
+        return numbers[_index];
+    }
+
+    function getLength() public view returns (uint256) {
+        return numbers.length;
+    }
+
+    function removeLastNumber() public {
+        require(numbers.length > 0, "Array is empty");
+        numbers.pop();
+    }
+}

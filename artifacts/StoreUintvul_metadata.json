@@ -76,7 +76,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Contracts/practical7.sol": "StoreUint"
+			"Contracts/practical7.sol": "StoreUintvul"
 		},
 		"evmVersion": "osaka",
 		"libraries": {},

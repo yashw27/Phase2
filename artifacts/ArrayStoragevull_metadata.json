@@ -6,12 +6,39 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_number",
+						"type": "uint256"
+					}
+				],
+				"name": "addNumber",
+				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "constructor"
+				"type": "function"
 			},
 			{
 				"inputs": [],
+				"name": "getLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_index",
+						"type": "uint256"
+					}
+				],
 				"name": "getNumber",
 				"outputs": [
 					{
@@ -24,40 +51,27 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "number",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_newNumber",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "storeNumber",
+				"name": "numbers",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "removeLastNumber",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -76,7 +90,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Contracts/practical7.sol": "StoreUint"
+			"Contracts/practical7.sol": "ArrayStoragevull"
 		},
 		"evmVersion": "osaka",
 		"libraries": {},
@@ -91,11 +105,11 @@
 	},
 	"sources": {
 		"Contracts/practical7.sol": {
-			"keccak256": "0xd174984f43e5340f15b461294f29caba0e39301af6d247f13cbb60b5682cb2df",
+			"keccak256": "0x01d291b52b585c4ee39a492ce0c1f027e9cdd83a1cbff4995b9772eae4deac67",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://28acf1bb18470481e570546c966643a3d30a3712a7725228d921d0e485ada23d",
-				"dweb:/ipfs/QmekDnv8GooJDnGXQ9wbam8PR5PzJQhhVQ8qSjsXjaJuMj"
+				"bzz-raw://f9b8795b48e94188cb05971926b584e9235056c91f99e481b0375191f333e7b3",
+				"dweb:/ipfs/QmaeHcMsSUYTsCDUXak8D9G6PWy1DxiTAhidHhDfFqAHCn"
 			]
 		}
 	},

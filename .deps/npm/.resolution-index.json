@@ -1,5 +1,8 @@
 {
   ".git/new.sol": {
     "__sources__": {}
+  },
+  ".git/Contracts/practical1.sol": {
+    "__sources__": {}
   }
 }

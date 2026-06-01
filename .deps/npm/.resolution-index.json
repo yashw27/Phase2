@@ -3,6 +3,11 @@
     "__sources__": {}
   },
   ".git/Contracts/practical1.sol": {
-    "__sources__": {}
+    "__sources__": {
+      ".git/Contracts/practical1.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ncontract SimpleStorage {\r\n    uint256 public number;\r\n\r\n    function setNumber(uint256 _number) public {\r\n        number = _number;\r\n    }\r\n\r\n    function getNumber() public view returns (uint256) {\r\n        return number;\r\n    }\r\n}",
+        "file": ".git/Contracts/practical1.sol"
+      }
+    }
   }
 }

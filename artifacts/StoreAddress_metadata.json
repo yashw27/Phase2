@@ -6,32 +6,18 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "oldValue",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newValue",
-						"type": "uint256"
-					}
-				],
-				"name": "NumberUpdated",
-				"type": "event"
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
 			},
 			{
 				"inputs": [],
-				"name": "number",
+				"name": "getAddress",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "address",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -39,12 +25,12 @@
 			},
 			{
 				"inputs": [],
-				"name": "previousNumber",
+				"name": "owner",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "address",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -53,14 +39,27 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "_newNumber",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "_newAddress",
+						"type": "address"
 					}
 				],
-				"name": "updateNumber",
+				"name": "storeAddress",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "userAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -77,7 +76,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Contracts/practical2.sol": "StateOverwrite"
+			"Contracts/practical3.sol": "StoreAddress"
 		},
 		"evmVersion": "osaka",
 		"libraries": {},
@@ -91,12 +90,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"Contracts/practical2.sol": {
-			"keccak256": "0x54cad5b19f91af01af61e55c44b87ebeb57fdc4fe053ade0452d3a5a5c482c66",
+		"Contracts/practical3.sol": {
+			"keccak256": "0x3cef9ecd667680e71439e32d2b788c42631fe2ba4a756fd24032737799ab72c3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d6bec4379efabc338becf54ba7d1f7ccd2be43343f806e1028d95e5ba7dd594d",
-				"dweb:/ipfs/QmepDWgJy9qH31H45NFonLx9W7WoRQd1UiQW3bNAYriAEg"
+				"bzz-raw://18e3575588dfc90d616bb118b618d2a562630b73454e9bea21e11d1e03a696c2",
+				"dweb:/ipfs/Qmc7Um5dLmwgMN682tjwPJa84io71beqh23TYACiqaSV35"
 			]
 		}
 	},

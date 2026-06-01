@@ -6,23 +6,30 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
-				"inputs": [
+				"inputs": [],
+				"name": "getNumber",
+				"outputs": [
 					{
-						"indexed": false,
 						"internalType": "uint256",
-						"name": "oldValue",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newValue",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "NumberUpdated",
-				"type": "event"
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getpreviousNumber",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -77,7 +84,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Contracts/practical2.sol": "StateOverwrite"
+			"Contracts/practical2.sol": "StateOverwriteVul"
 		},
 		"evmVersion": "osaka",
 		"libraries": {},

@@ -268,7 +268,7 @@ IMPORTANT CONCEPTS LEARNED
 // patches code
 
 
-contract StateOverwrite {
+contract StateOverwriteVul {
 
     uint256 public number;
     uint256 public previousNumber;
@@ -386,7 +386,6 @@ number = _newNumber;
 
 contract StateOverwrite {
 
-```
 uint256 public number;
 uint256 public previousNumber;
 

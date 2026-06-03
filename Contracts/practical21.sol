@@ -1,0 +1,624 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+/*
+=========================================================
+PRACTICAL: Modify copied memory array
+CONCEPT: Storage unaffected
+=========================================================
+
+OBJECTIVE
+
+- Learn how copied memory arrays behave
+- Understand storage remains unchanged
+- Learn independent copy behavior
+- Understand memory isolation from storage
+
+---------------------------------------------------------
+CORE IDEA
+---------------------------------------------------------
+
+When storage array is copied into memory:
+
+uint256[] memory temp = numbers;
+
+A COMPLETELY SEPARATE copy is created.
+
+---------------------------------------------------------
+IMPORTANT UNDERSTANDING
+---------------------------------------------------------
+
+After copying:
+- modifying memory affects ONLY memory
+- original storage remains unchanged
+- memory and storage become independent
+
+---------------------------------------------------------
+WHY THIS MATTERS
+---------------------------------------------------------
+
+Many Solidity bugs happen because developers:
+- expect storage mutation
+- but only modify memory copy
+
+---------------------------------------------------------
+REAL-WORLD USAGE
+---------------------------------------------------------
+
+Memory copies useful for:
+
+- temporary calculations
+- filtering
+- sorting
+- safe transformations
+- read-only processing
+
+---------------------------------------------------------
+AUDITOR FOCUS
+---------------------------------------------------------
+
+Auditors inspect:
+
+- Did developer intend memory copy?
+- Is storage expected to change?
+- Are mutations happening safely?
+- Can copying large arrays create DOS?
+- Is memory/storage confusion present?
+
+=========================================================
+*/
+
+contract ModifyCopiedMemoryArrayvul {
+
+    uint256[] public numbers;
+
+    function addValues() public {
+
+        /*
+            STORE VALUES PERMANENTLY
+            inside storage array
+        */
+        numbers.push(100);
+
+        numbers.push(200);
+
+        numbers.push(300);
+    }
+
+    function modifyMemoryCopy()
+        public
+        view
+        returns (
+            uint256[] memory,
+            uint256[] memory
+        )
+    {
+
+        /*
+            STORAGE -> MEMORY COPY
+
+            tempArray becomes independent copy.
+        */
+        uint256[] memory tempArray = numbers;
+
+        /*
+            MODIFY MEMORY COPY ONLY
+        */
+        tempArray[0] = 999;
+
+        /*
+            RETURN:
+            1. Modified memory copy
+            2. Original storage array
+        */
+        return (tempArray, numbers);
+    }
+
+    function getStorageArray()
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return numbers;
+    }
+}
+
+/*
+=========================================================
+EXECUTION FLOW
+=========================================================
+
+CALL:
+addValues()
+
+STORAGE ARRAY:
+
+[100,200,300]
+
+---------------------------------------------------------
+
+CALL:
+modifyMemoryCopy()
+
+EVM ACTIONS:
+
+1. Storage array loaded
+2. Full memory copy created
+3. tempArray becomes independent
+4. tempArray[0] modified
+5. Memory copy changes only
+6. Original storage untouched
+
+---------------------------------------------------------
+
+MEMORY ARRAY:
+
+[999,200,300]
+
+---------------------------------------------------------
+
+ORIGINAL STORAGE ARRAY:
+
+[100,200,300]
+
+=========================================================
+REMIX TESTING
+=========================================================
+
+STEP 1:
+Deploy contract
+
+---------------------------------------------------------
+
+STEP 2:
+Call:
+addValues()
+
+---------------------------------------------------------
+
+STEP 3:
+Call:
+getStorageArray()
+
+EXPECTED:
+[100,200,300]
+
+---------------------------------------------------------
+
+STEP 4:
+Call:
+modifyMemoryCopy()
+
+EXPECTED RETURN:
+
+Modified Memory:
+[999,200,300]
+
+Original Storage:
+[100,200,300]
+
+---------------------------------------------------------
+
+STEP 5:
+Call:
+getStorageArray()
+
+EXPECTED:
+[100,200,300]
+
+OBSERVE:
+Storage unchanged.
+
+=========================================================
+EDGE CASE TESTS
+=========================================================
+
+TEST:
+Copy empty storage array
+
+EXPECTED:
+Empty arrays returned
+
+---------------------------------------------------------
+
+TEST:
+Modify multiple memory indexes
+
+EXPECTED:
+Only memory copy changes
+
+---------------------------------------------------------
+
+TEST:
+Repeated function calls
+
+OBSERVE:
+Fresh memory copy created every execution
+
+=========================================================
+IMPORTANT COPY UNDERSTANDING
+=========================================================
+
+THIS LINE:
+
+uint256[] memory tempArray = numbers;
+
+---------------------------------------------------------
+
+CREATES:
+Independent memory copy.
+
+---------------------------------------------------------
+
+DOES NOT CREATE:
+Storage reference.
+
+=========================================================
+MEMORY ISOLATION
+=========================================================
+
+BEFORE MODIFICATION
+
+Storage:
+[100,200,300]
+
+Memory:
+[100,200,300]
+
+---------------------------------------------------------
+
+AFTER MEMORY MODIFICATION
+
+Storage:
+[100,200,300]
+
+Memory:
+[999,200,300]
+
+---------------------------------------------------------
+
+IMPORTANT:
+Storage remains unaffected.
+
+=========================================================
+MEMORY VS STORAGE REFERENCE
+=========================================================
+
+---------------------------------------------------------
+MEMORY COPY
+---------------------------------------------------------
+
+uint256[] memory temp = numbers;
+
+Independent copy.
+
+---------------------------------------------------------
+STORAGE REFERENCE
+---------------------------------------------------------
+
+uint256[] storage temp = numbers;
+
+Direct pointer to storage.
+
+Changes affect original array.
+
+=========================================================
+GAS OBSERVATION
+=========================================================
+
+COPYING ARRAYS:
+Consumes gas
+
+---------------------------------------------------------
+
+Reason:
+Every storage element copied into memory.
+
+---------------------------------------------------------
+
+VERY LARGE ARRAYS:
+May become expensive.
+
+=========================================================
+SECURITY / AUDITOR MINDSET
+=========================================================
+
+---------------------------------------------------------
+1. MEMORY/STORAGE CONFUSION
+---------------------------------------------------------
+
+Extremely common Solidity issue.
+
+Developers may expect:
+storage updates
+
+but only modify memory copy.
+
+---------------------------------------------------------
+2. SILENT LOGIC FAILURES
+---------------------------------------------------------
+
+Protocol logic may silently fail
+because state never updates.
+
+---------------------------------------------------------
+3. DOS RISK
+---------------------------------------------------------
+
+Huge arrays copied into memory
+may consume excessive gas.
+
+---------------------------------------------------------
+4. REFERENCE VALIDATION
+---------------------------------------------------------
+
+Auditors carefully inspect:
+- copy semantics
+- reference behavior
+- mutation expectations
+
+=========================================================
+ATTACK THINKING
+=========================================================
+
+ATTACK SCENARIO
+
+Attacker inflates storage array size.
+
+Function copying arrays:
+becomes too expensive.
+
+Result:
+DOS via gas exhaustion.
+
+---------------------------------------------------------
+
+ANOTHER RISK
+
+Critical protocol update expected
+to modify storage.
+
+Developer accidentally modifies memory copy only.
+
+Security logic silently breaks.
+
+=========================================================
+MINI CHALLENGE
+=========================================================
+
+Modify contract so that:
+
+1. Create STORAGE reference instead
+2. Modify referenced array
+3. Observe storage changes permanently
+
+BONUS:
+Compare:
+memory copy vs storage reference behavior
+
+=========================================================
+IMPORTANT CONCEPTS LEARNED
+=========================================================
+
+- Storage-to-memory creates independent copy
+- Memory modifications do not affect storage
+- Memory arrays are temporary
+- Storage persists permanently
+- Memory and storage become isolated
+- Copying arrays consumes gas
+- Large copies may create DOS risks
+- Storage references behave differently
+- Memory/storage confusion causes bugs
+- Auditors inspect reference semantics carefully
+
+=========================================================
+*/
+
+contract ModifyCopiedMemoryArray {
+
+    uint256[] public numbers;
+
+    function addValues() public {
+        numbers.push(100);
+        numbers.push(200);
+        numbers.push(300);
+    }
+
+    function modifyStorageReference()
+        public
+        returns (
+            uint256[] memory,
+            uint256[] memory
+        )
+    {
+        /*
+            STORAGE REFERENCE
+
+            Points directly to numbers
+        */
+        uint256[] storage storageRef = numbers;
+
+        /*
+            MODIFY STORAGE DIRECTLY
+        */
+        storageRef[0] = 999;
+
+        /*
+            BOTH RETURNS SHOW
+            UPDATED STORAGE DATA
+        */
+        return (numbers, numbers);
+    }
+
+    function getStorageArray()
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return numbers;
+    }
+}
+
+/*
+Audit Report
+Title:
+
+Storage Reference Causes Permanent Modification of Original Array
+
+Severity:
+
+Informational
+
+Reason:
+
+A storage reference points directly to the original storage array. Any modification through the reference permanently updates contract state.
+
+Location
+
+Contract: ModifyCopiedMemoryArray
+Function: modifyStorageReference()
+
+Vulnerability Description
+
+The modified function replaces the memory copy with a storage reference.
+
+Example:
+
+function modifyStorageReference()
+    public
+    returns (
+        uint256[] memory,
+        uint256[] memory
+    )
+{
+    uint256[] storage storageRef = numbers;
+
+    storageRef[0] = 999;
+
+    return (numbers, numbers);
+}
+
+Unlike:
+
+uint256[] memory tempArray = numbers;
+
+which creates a separate copy, the following:
+
+uint256[] storage storageRef = numbers;
+
+creates an alias to the original storage array.
+
+As a result, modifying storageRef directly modifies numbers.
+
+Impact
+
+No direct security impact.
+
+However, misunderstanding storage references can lead to:
+
+Unexpected state modifications.
+Incorrect business logic.
+Permanent alteration of stored data.
+Increased gas costs due to storage writes.
+Proof of Concept
+Step 1: Populate Storage
+addValues();
+
+Storage:
+
+numbers = [100, 200, 300]
+Step 2: Modify Through Storage Reference
+modifyStorageReference();
+
+Execution:
+
+uint256[] storage storageRef = numbers;
+
+storageRef[0] = 999;
+Step 3: Read Storage
+getStorageArray();
+
+Result:
+
+[999, 200, 300]
+
+The original storage array has changed permanently.
+
+Root Cause
+
+The following statement creates a storage alias:
+
+uint256[] storage storageRef = numbers;
+
+No copy occurs.
+
+Both variables reference the same storage location.
+
+Therefore:
+
+storageRef[0] = 999;
+
+is equivalent to:
+
+numbers[0] = 999;
+Recommendation
+
+Use storage references only when persistent state modification is intended.
+
+Use memory copies when temporary calculations or transformations are required.
+
+Example:
+
+uint256[] memory tempArray = numbers;
+
+tempArray[0] = 999;
+
+This does not affect the original storage array.
+
+Patched Code (Storage Reference Version)
+*/
+
+contract ModifyCopiedMemoryArrayv {
+
+    uint256[] public numbers;
+
+    function addValues() public {
+        numbers.push(100);
+        numbers.push(200);
+        numbers.push(300);
+    }
+
+    function modifyStorageReference()
+        public
+        returns (
+            uint256[] memory,
+            uint256[] memory
+        )
+    {
+        /*
+            STORAGE REFERENCE
+
+            Points directly to numbers
+        */
+        uint256[] storage storageRef = numbers;
+
+        /*
+            MODIFY STORAGE DIRECTLY
+        */
+        storageRef[0] = 999;
+
+        /*
+            BOTH RETURNS SHOW
+            UPDATED STORAGE DATA
+        */
+        return (numbers, numbers);
+    }
+
+    function getStorageArray()
+        public
+        view
+        returns (uint256[] memory)
+    {
+        return numbers;
+    }
+}
